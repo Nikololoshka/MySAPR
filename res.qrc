@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/stylesheet">
+        <file alias="branch-end.png">res/stylesheet/branch-end.png</file>
+        <file alias="branch-more.png">res/stylesheet/branch-more.png</file>
+        <file alias="vline.png">res/stylesheet/vline.png</file>
+    </qresource>
+    <qresource prefix="/icon">
+        <file alias="go-down.png">res/icon/go-down.png</file>
+        <file alias="go-up.png">res/icon/go-up.png</file>
+        <file alias="list-add.png">res/icon/list-add.png</file>
+        <file alias="list-remove.png">res/icon/list-remove.png</file>
+        <file alias="app.png">res/icon/app.png</file>
+    </qresource>
+</RCC>
