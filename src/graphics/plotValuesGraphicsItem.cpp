@@ -48,7 +48,6 @@ void PlotValuesGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphics
     double x = minDrawStep;
     double y = height_ / 2;
 
-    painter->setBrush(Qt::BDiagPattern);
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     // оси
@@ -67,16 +66,72 @@ void PlotValuesGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphics
         }
         polygon << QPointF(x + partLenghts_[i], y);
 
+        painter->setBrush(Qt::BDiagPattern);
         painter->drawPolygon(polygon);
+
+        double dyLeft = - minDrawStep / 3;
+        if (i > 0) {
+            if (qAbs(parts_[i - 1].right - parts_[i].left) > 1e-10) {
+                if (parts_[i - 1].right > parts_[i].left) {
+                    dyLeft = minDrawStep / 3;
+                }
+                if (polygon[1].y() > y && dyLeft > 0) {
+                    dyLeft /= 3;
+                }
+
+                auto res = createText(QRectF(x,
+                                             polygon[1].y() + dyLeft,
+                                             minDrawStep / 2,
+                                             minDrawStep / 4).toRect(),
+                                      Qt::AlignCenter,
+                                      QString::number(parts_[i].left, 'f', 3));
+                painter->setFont(res.font);
+                painter->setBrush(Qt::white);
+                painter->drawRect(res.rect);
+                painter->drawText(res.rect, Qt::AlignCenter, res.text);
+            }
+        } else {
+            auto res = createText(QRectF(x,
+                                         polygon[1].y() + dyLeft,
+                                         minDrawStep / 2,
+                                         minDrawStep / 4).toRect(),
+                                  Qt::AlignCenter,
+                                  QString::number(parts_[i].left, 'f', 3));
+            painter->setFont(res.font);
+            painter->setBrush(Qt::white);
+            painter->drawRect(res.rect);
+            painter->drawText(res.rect, Qt::AlignCenter, res.text);
+        }
+
         x += partLenghts_[i];
+
+        double dyRight = - minDrawStep / 3;
+        if (i < parts_.size() - 1 && parts_[i].right < parts_[i + 1].left) {
+            dyRight = minDrawStep / 3;
+        }
+
+        if (polygon[polygon.size() - 2].y() > y && dyRight > 0) {
+            dyRight /= 3;
+        }
+
+        auto res = createText(QRectF(x - minDrawStep / 2,
+                                     polygon[polygon.size() - 2].y() + dyRight,
+                                     minDrawStep / 2 - 1,
+                                     minDrawStep / 4).toRect(),
+                              Qt::AlignCenter,
+                              QString::number(parts_[i].right, 'f', 3));
+        painter->setFont(res.font);
+        painter->setBrush(Qt::white);
+        painter->drawRect(res.rect);
+        painter->drawText(res.rect, Qt::AlignCenter, res.text);
     }
 
     // отметка
-    auto res = createText(QRect(static_cast<int>(minDrawStep / 4), static_cast<int>(y - minDrawStep / 2),
-                                static_cast<int>(minDrawStep / 2), static_cast<int>(minDrawStep / 2)),
-                          Qt::AlignCenter);
+    auto res = createText(QRectF(minDrawStep / 4, y - minDrawStep / 2,
+                                 minDrawStep / 2, minDrawStep / 2).toRect(),
+                          Qt::AlignCenter, label_);
     painter->setFont(res.font);
-    painter->drawText(res.rect, label_);
+    painter->drawText(res.rect, Qt::AlignCenter, res.text);
 }
 
 double PlotValuesGraphicsItem::width() const
@@ -109,20 +164,25 @@ void PlotValuesGraphicsItem::setPartLenghts(const QVector<double> &partLenghts)
     partLenghts_ = partLenghts;
 }
 
-PlotValuesGraphicsItem::LabelResult PlotValuesGraphicsItem::createText(const QRect &rect, int flags) const
+PlotValuesGraphicsItem::LabelResult PlotValuesGraphicsItem::createText(const QRect &rect,
+                                                                       int flags,
+                                                                       QString text) const
 {
     QFont correctFont = QApplication::font();
+    if (text.size() == 1) {
+        text = " " + text + " ";
+    }
 
     QRect tempRect;
     for (int i = 1; i < 100; ++i) {
         correctFont.setPixelSize(i);
-        tempRect = QFontMetrics(correctFont).boundingRect(rect, flags, label_);
+        tempRect = QFontMetrics(correctFont).boundingRect(rect, flags, text);
         if (tempRect.height() > rect.height() || tempRect.width() > rect.width()) {
             correctFont.setPixelSize(i - 1);
-            return {correctFont, tempRect};
+            return {correctFont, tempRect, text};
         }
     }
-    return {correctFont, tempRect};
+    return {correctFont, tempRect, text};
 }
 
 QString PlotValuesGraphicsItem::label() const

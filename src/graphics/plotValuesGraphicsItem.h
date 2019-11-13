@@ -78,15 +78,17 @@ private:
     struct LabelResult {
         QFont font; /*! Шрифт. */
         QRect rect; /*!< Прямоугольник для отрисоки. */
+        QString text;   /*!< Текст. */
     };
 
     /*!
       Создает данные для отрисовки подписи.
      \param rect - максимальная область для отображения.
      \param flags - параметры отображения.
+     \param text - текст.
      \return LabelResult - данные для отрисовки.
     */
-    LabelResult createText(const QRect &rect, int flags) const;
+    LabelResult createText(const QRect &rect, int flags, QString text) const;
 
 private:
     double minDrawStep; /*!< Минимальный размер отрисовки. */
