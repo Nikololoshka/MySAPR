@@ -282,6 +282,8 @@ void ConstructionGraphicsScene::updateDrawing()
     // скрыть отставшиеся нагрузки
     for (auto &el: forceItems)
         el->setVisible(false);
+
+    update();
 }
 
 bool ConstructionGraphicsScene::isForceToNode() const
@@ -390,6 +392,15 @@ void ConstructionGraphicsScene::showSectionalLabels(bool show)
 void ConstructionGraphicsScene::showRodLengths(bool show)
 {
     displyRodLengths_ = show;
+    if (!show) {
+        for (auto &el : rodLengths) {
+            el->setVisible(false);
+        }
+
+        for (auto &el : separateLines) {
+            el->setVisible(false);
+        }
+    }
     updateDrawing();
 }
 
@@ -440,7 +451,7 @@ QPair<QVector<double>, double> ConstructionGraphicsScene::computeWidth(const dou
 
     double unallocatedLength = maxLength;
     while ((commonLengths - maxLength) >= 1 && (checked != result.size())) {
-        int diffCount = 0;
+        double diffCount = 0;
         double diffLength = 0;
         commonLengths = 0;
 

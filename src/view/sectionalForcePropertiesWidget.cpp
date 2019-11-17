@@ -51,7 +51,7 @@ void SectionalForcePropertiesWidget::sectionalForceChanged()
     if (index_ == -1)
         return;
 
-    qDebug() << "Edit " << index_;
+    // qDebug() << "Edit " << index_;
 
     (*forces_)[index_].setRodId(spinBoxRodId->value());
     (*forces_)[index_].setForce(doubleSpinBoxSectionalForce->value());

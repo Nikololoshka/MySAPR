@@ -354,31 +354,64 @@ void PostProcessorWindow::initGraphicMode(ConstructionGraphicsScene *scene)
     graphicScene->addPlot(QString::fromUtf8("\u03C3\u2093"), &Processor::normalStrain);
 
     QMenu *menuView = new QMenu();
-    menuView->addAction(tr("Показать номера &стержней"), graphicScene,
-                        &ConstructionPlotGraphicsScene::showRodLabels,
-                        QKeySequence("CTRL+R"))->setCheckable(true);
-    menuView->addAction(tr("Показать номера &узлов"), graphicScene,
-                        &ConstructionPlotGraphicsScene::showNodeLabels,
-                        QKeySequence("CTRL+T"))->setCheckable(true);
-    menuView->addAction(tr("Показать значения F нагрузок"), graphicScene,
-                       &ConstructionPlotGraphicsScene::showLongitudinalLabels,
-                        QKeySequence("CTRL+Y"))->setCheckable(true);
-    menuView->addAction(tr("Показать значения q нагрузок"), graphicScene,
-                       &ConstructionPlotGraphicsScene::showSectionalLabels,
-                        QKeySequence("CTRL+U"))->setCheckable(true);
-    menuView->addAction(tr("Показать длину стержней"), graphicScene,
-                       &ConstructionPlotGraphicsScene::showRodLengths,
-                        QKeySequence("CTRL+I"))->setCheckable(true);
+    QAction *actionRodLabels =
+            menuView->addAction(tr("Показать номера &стержней"),
+                                graphicScene,
+                                &ConstructionPlotGraphicsScene::showRodLabels,
+                                QKeySequence(Qt::CTRL + Qt::Key_R));
+    actionRodLabels->setCheckable(true);
+
+    QAction *actionNodeLabels =
+            menuView->addAction(tr("Показать номера &узлов"),
+                                graphicScene,
+                                &ConstructionPlotGraphicsScene::showNodeLabels,
+                                QKeySequence(Qt::CTRL + Qt::Key_T));
+    actionNodeLabels ->setCheckable(true);
+
+    QAction *actionLongitudinalLabels =
+            menuView->addAction(tr("Показать значения F нагрузок"),
+                                graphicScene,
+                                &ConstructionPlotGraphicsScene::showLongitudinalLabels,
+                                QKeySequence(Qt::CTRL + Qt::Key_Y));
+    actionLongitudinalLabels->setCheckable(true);
+
+    QAction *actionSectionalLabels =
+            menuView->addAction(tr("Показать значения q нагрузок"),
+                                graphicScene,
+                                &ConstructionPlotGraphicsScene::showSectionalLabels,
+                                QKeySequence(Qt::CTRL + Qt::Key_U));
+    actionSectionalLabels->setCheckable(true);
+
+    QAction *actionRodLengths =
+            menuView->addAction(tr("Показать длину стержней"),
+                                graphicScene,
+                                &ConstructionPlotGraphicsScene::showRodLengths,
+                                QKeySequence(Qt::CTRL + Qt::Key_I));
+    actionRodLengths->setCheckable(true);
+
     menuView->addSeparator();
-    menuView->addAction(tr("Нагрузки F к узлу"), graphicScene,
-                       &ConstructionPlotGraphicsScene::longitudinalforceToNode,
-                        QKeySequence("CTRL+B"))->setCheckable(true);
+
+    QAction *actionlongitudinalforceToNode =
+            menuView->addAction(tr("Нагрузки F к узлу"),
+                                graphicScene,
+                                &ConstructionPlotGraphicsScene::longitudinalforceToNode,
+                                QKeySequence(Qt::CTRL + Qt::Key_B));
+    actionlongitudinalforceToNode->setCheckable(true);
+
+    menuView->addSeparator();
+    QAction *actionPlotsValues =
+            menuView->addAction(tr("Отображать значения эпюра"),
+                                graphicScene,
+                                &ConstructionPlotGraphicsScene::showPlotsValues,
+                                QKeySequence(Qt::CTRL + Qt::Key_V));
+    actionPlotsValues->setCheckable(true);
 
     QToolButton *buttonView = new QToolButton();
     buttonView->setText(tr("Настройка отображения"));
     buttonView->setPopupMode(QToolButton::InstantPopup);
     buttonView->setMenu(menuView);
 
+    // перенос настроек с сцены
     if (scene != nullptr) {
         graphicScene->showRodLabels(scene->displayRodNumbers());
         graphicScene->showNodeLabels(scene->displayNodeNumbers());
@@ -386,10 +419,17 @@ void PostProcessorWindow::initGraphicMode(ConstructionGraphicsScene *scene)
         graphicScene->showLongitudinalLabels(scene->displayLongitudinalLabels());
         graphicScene->showSectionalLabels(scene->displaySectionalLabels());
         graphicScene->longitudinalforceToNode(scene->isForceToNode());
+
+        actionRodLabels->setChecked(scene->displayRodNumbers());
+        actionNodeLabels->setChecked(scene->displayNodeNumbers());
+        actionLongitudinalLabels->setChecked(scene->displyRodLengths());
+        actionSectionalLabels->setChecked(scene->displayLongitudinalLabels());
+        actionRodLengths->setChecked(scene->displaySectionalLabels());
+        actionlongitudinalforceToNode->setChecked(scene->isForceToNode());
     }
 
     spinBoxScale = new QSpinBox();
-    spinBoxScale->setRange(50, 300);
+    spinBoxScale->setRange(50, 500);
     spinBoxScale->setValue(100);
     spinBoxScale->setSingleStep(5);
     spinBoxScale->setSuffix("%");

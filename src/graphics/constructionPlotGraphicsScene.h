@@ -33,6 +33,13 @@ public:
     */
     void updateSize(int width, int height) override;
 
+public slots:
+    /*!
+      Устанавливает параметр отображения значений эпюра.
+     \param show - параметр.
+    */
+    void showPlotsValues(bool show);
+
 protected:
     /*!
       Переопределенный метод.
@@ -41,7 +48,9 @@ protected:
     void updateDrawing() override;
 
 private:
-   int PLOTS_HEIGHT; /*!< Общая высота всех эпюров. */
+    int PLOTS_HEIGHT; /*!< Общая высота всех эпюров. */
+
+    bool displayPlotsValues; /*!< Отвечает за отображение значений на эпюрах. */
 
     QSharedPointer<Processor> processor_;       /*!< Процессор. */
     QVector<PlotValuesGraphicsItem*> plots_;    /*!< Массив с эпюрами. */

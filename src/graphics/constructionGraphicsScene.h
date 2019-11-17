@@ -122,62 +122,62 @@ public:
     virtual void clearAll();
 
     /*!
-      Возвращает параметр показа номеров стержней.
+      Возвращает параметр отображения номеров стержней.
     */
     bool displayRodNumbers() const;
     /*!
-      Возвращает параметр показа номеров узлов.
+      Возвращает параметр отображения номеров узлов.
     */
     bool displayNodeNumbers() const;
     /*!
-      Возвращает параметр показа значений сосредаточенных нагрузок.
+      Возвращает параметр отображения значений сосредаточенных нагрузок.
     */
     bool displayLongitudinalLabels() const;
     /*!
-      Возвращает параметр показа значений распределенных нагрузок.
+      Возвращает параметр отображения значений распределенных нагрузок.
     */
     bool displaySectionalLabels() const;
     /*!
-      Возвращает параметр показа длин стержней.
+      Возвращает параметр отображения длин стержней.
     */
     bool displyRodLengths() const;
     /*!
-      Возвращает параметр показа сосредоточенный силы к узлу.
+      Возвращает параметр отображения сосредоточенный силы к узлу.
     */
     bool isForceToNode() const;
 
 public slots:
     /*!
-      Устанавливает параметр показа номеров стержней.
+      Устанавливает параметр отображения номеров стержней.
      \param show - параметр.
     */
-    virtual void showRodLabels(bool show);
+    void showRodLabels(bool show);
     /*!
-      Устанавливает параметр показа номеров узлов.
+      Устанавливает параметр отображения номеров узлов.
      \param show - параметр.
     */
-    virtual void showNodeLabels(bool show);
+    void showNodeLabels(bool show);
     /*!
-      Устанавливает параметр показа значения сосредаточенных нагрузок.
+      Устанавливает параметр отображения значения сосредаточенных нагрузок.
      \param show - параметр.
     */
-    virtual void showLongitudinalLabels(bool show);
+    void showLongitudinalLabels(bool show);
     /*!
-      Устанавливает параметр показа распределенных нагрузок.
+      Устанавливает параметр отображения распределенных нагрузок.
      \param show - параметр.
     */
-    virtual void showSectionalLabels(bool show);
+    void showSectionalLabels(bool show);
     /*!
-      Устанавливает параметр показа длин стержня.
+      Устанавливает параметр отображения длин стержня.
      \param show - параметр.
     */
-    virtual void showRodLengths(bool show);
+    void showRodLengths(bool show);
 
     /*!
-      Устанавливает параметр показа сосредоточенный силы к узлу.
+      Устанавливает параметр отображения сосредоточенный силы к узлу.
      \param forceToNode - параметр.
     */
-    virtual void longitudinalforceToNode(bool forceToNode);
+    void longitudinalforceToNode(bool forceToNode);
 
 protected:
     /*!

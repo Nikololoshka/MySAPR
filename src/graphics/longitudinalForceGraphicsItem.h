@@ -51,7 +51,7 @@ public:
     void updateValues(int nodeId, double value);
     /*!
       Устанавливает, отображать ли значение нагрузки.
-     \param show - параметр показа.
+     \param show - параметр отображения.
     */
     void showLabel(bool show);
 

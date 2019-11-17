@@ -53,7 +53,7 @@ void LongitudinalForcePropertiesWidget::longitudinalForceChanged()
     if (index_ == -1)
         return;
 
-    qDebug() << "Edit " << index_;
+    // qDebug() << "Edit " << index_;
 
     (*forces_)[index_].setNodeId(spinBoxNodeId->value());
     (*forces_)[index_].setForce(doubleSpinBoxLongitudinalForce->value());

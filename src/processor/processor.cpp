@@ -71,9 +71,16 @@ void Processor::compute(const QVector<Rod> &rods,
 
 void Processor::save(QString path)
 {
-    const QString SUFFIX = ".compute.json";
-    if (!path.endsWith(SUFFIX)) {
-        path += SUFFIX;
+
+    const QString SUFFIX = ".json";
+    const QString FULL_SUFFIC = ".compute.json";
+
+    if (path.endsWith(SUFFIX)) {
+       path.chop(SUFFIX.size());
+    }
+
+    if (!path.endsWith(FULL_SUFFIC)) {
+        path += FULL_SUFFIC;
     }
 
     QJsonArray rodArray;
@@ -108,7 +115,8 @@ void Processor::save(QString path)
 
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly)) {
-        qWarning() << "Couldn't save file";
+        // qWarning() << "Couldn't save file";
+        throw std::runtime_error("Couldn't save file");
     }
 
     file.write(doc.toJson(QJsonDocument::Indented));
@@ -118,7 +126,8 @@ void Processor::load(QString path)
 {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Couldn't open file";
+        // qWarning() << "Couldn't open file";
+        throw std::runtime_error("Couldn't open file");
     }
 
     QByteArray saveData = file.readAll();

@@ -69,62 +69,69 @@ void PlotValuesGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphics
         painter->setBrush(Qt::BDiagPattern);
         painter->drawPolygon(polygon);
 
-        double dyLeft = - minDrawStep / 3;
-        if (i > 0) {
-            if (qAbs(parts_[i - 1].right - parts_[i].left) > 1e-10) {
-                if (parts_[i - 1].right > parts_[i].left) {
-                    dyLeft = minDrawStep / 3;
-                }
-                if (polygon[1].y() > y && dyLeft > 0) {
-                    dyLeft /= 3;
-                }
+        if (displyValues_) {
+            // значения на левой части
+            double dyLeft = - minDrawStep / 3;
+            if (i > 0) {
+                if (qAbs(parts_[i - 1].right - parts_[i].left) > 1e-10) {
+                    if (parts_[i - 1].right > parts_[i].left) {
+                        dyLeft = minDrawStep / 3;
+                    }
+                    if (polygon[1].y() > y && dyLeft > 0) {
+                        dyLeft /= 3;
+                    }
 
+                    auto res = createText(QRectF(x,
+                                                 polygon[1].y() + dyLeft,
+                                                 minDrawStep / 2,
+                                                 minDrawStep / 4).toRect(),
+                                          Qt::AlignCenter,
+                                          QString::number(parts_[i].left, 'g', 4));
+                    painter->setFont(res.font);
+                    painter->setBrush(Qt::white);
+                    painter->drawRect(res.rect);
+                    painter->drawText(res.rect, Qt::AlignCenter, res.text);
+                }
+            } else {
                 auto res = createText(QRectF(x,
                                              polygon[1].y() + dyLeft,
                                              minDrawStep / 2,
                                              minDrawStep / 4).toRect(),
                                       Qt::AlignCenter,
-                                      QString::number(parts_[i].left, 'f', 3));
+                                      QString::number(parts_[i].left, 'g', 4));
                 painter->setFont(res.font);
                 painter->setBrush(Qt::white);
                 painter->drawRect(res.rect);
                 painter->drawText(res.rect, Qt::AlignCenter, res.text);
             }
-        } else {
-            auto res = createText(QRectF(x,
-                                         polygon[1].y() + dyLeft,
+
+            x += partLenghts_[i];
+
+            // значения на правой части
+            double dyRight = - minDrawStep / 3;
+            if (i < parts_.size() - 1 && parts_[i].right < parts_[i + 1].left) {
+                dyRight = minDrawStep / 3;
+            }
+
+            if (polygon[polygon.size() - 2].y() > y && dyRight > 0) {
+                dyRight /= 3;
+            }
+
+            auto res = createText(QRectF(x - minDrawStep / 2,
+                                         polygon[polygon.size() - 2].y() + dyRight,
                                          minDrawStep / 2,
                                          minDrawStep / 4).toRect(),
                                   Qt::AlignCenter,
-                                  QString::number(parts_[i].left, 'f', 3));
+                                  QString::number(parts_[i].right, 'g', 4));
             painter->setFont(res.font);
             painter->setBrush(Qt::white);
             painter->drawRect(res.rect);
             painter->drawText(res.rect, Qt::AlignCenter, res.text);
+        } else {
+            x += partLenghts_[i];
         }
-
-        x += partLenghts_[i];
-
-        double dyRight = - minDrawStep / 3;
-        if (i < parts_.size() - 1 && parts_[i].right < parts_[i + 1].left) {
-            dyRight = minDrawStep / 3;
-        }
-
-        if (polygon[polygon.size() - 2].y() > y && dyRight > 0) {
-            dyRight /= 3;
-        }
-
-        auto res = createText(QRectF(x - minDrawStep / 2,
-                                     polygon[polygon.size() - 2].y() + dyRight,
-                                     minDrawStep / 2 - 1,
-                                     minDrawStep / 4).toRect(),
-                              Qt::AlignCenter,
-                              QString::number(parts_[i].right, 'f', 3));
-        painter->setFont(res.font);
-        painter->setBrush(Qt::white);
-        painter->drawRect(res.rect);
-        painter->drawText(res.rect, Qt::AlignCenter, res.text);
     }
+
 
     // отметка
     auto res = createText(QRectF(minDrawStep / 4, y - minDrawStep / 2,
@@ -183,6 +190,12 @@ PlotValuesGraphicsItem::LabelResult PlotValuesGraphicsItem::createText(const QRe
         }
     }
     return {correctFont, tempRect, text};
+}
+
+void PlotValuesGraphicsItem::setDisplyValues(bool displyValues)
+{
+    displyValues_ = displyValues;
+    update();
 }
 
 QString PlotValuesGraphicsItem::label() const

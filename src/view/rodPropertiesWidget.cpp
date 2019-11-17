@@ -72,7 +72,7 @@ void RodPropertiesWidget::rodDataChanged()
     if (index_ == -1)
         return;
 
-    qDebug() << "Edit " << index_;
+    // qDebug() << "Edit " << index_;
 
     (*rods_)[index_].setLength(doubleSpinBoxLength->value());
     (*rods_)[index_].setSectionalArea(doubleSpinBoxSectionalArea->value());

@@ -2,7 +2,9 @@
 
 ConstructionPlotGraphicsScene::ConstructionPlotGraphicsScene(QSharedPointer<Processor> &processor)
     : ConstructionGraphicsScene(),
-      PLOTS_HEIGHT(400)
+      PLOTS_HEIGHT(400),
+      displayPlotsValues(false)
+
 {
     processor_ = processor;
 }
@@ -19,6 +21,12 @@ void ConstructionPlotGraphicsScene::addPlot(const QString &label, CalcMethod met
 void ConstructionPlotGraphicsScene::updateSize(int width, int height)
 {
     setSceneRect(0, 0, width, height + PLOTS_HEIGHT);
+    updateDrawing();
+}
+
+void ConstructionPlotGraphicsScene::showPlotsValues(bool show)
+{
+    displayPlotsValues = show;
     updateDrawing();
 }
 
@@ -75,6 +83,7 @@ void ConstructionPlotGraphicsScene::updateDrawing()
     for (int i = 0; i < plots_.size(); ++i) {
         plots_[i]->setWidth(commonWidth + 2 * MIN_DRAW_STEP);
         plots_[i]->setHeight(plotHeight);
+        plots_[i]->setDisplyValues(displayPlotsValues);
         plots_[i]->setPartLenghts(resWidth);
         plots_[i]->setX(x - MIN_DRAW_STEP);
         plots_[i]->setY(y + maxHeight / 2 + MIN_DRAW_STEP * 1.2 +   // координата отображения длины
@@ -208,4 +217,6 @@ void ConstructionPlotGraphicsScene::updateDrawing()
     // скрыть отставшиеся нагрузки
     for (auto &el: forceItems)
         el->setVisible(false);
+
+    update();
 }

@@ -45,7 +45,7 @@ public:
     void updateValues(int rodId, double value);
     /*!
       Устанавливает, отображать ли значение нагрузки.
-     \param show - параметр показа.
+     \param show - параметр отображения.
     */
     void showLabel(bool show);
 

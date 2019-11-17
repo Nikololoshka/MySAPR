@@ -96,39 +96,44 @@ MySAPRWindow::MySAPRWindow(QWidget *parent)
 
     // menu bar
     QMenu *menuFile = menuBar()->addMenu(tr("&Файл"));
-    menuFile->addAction(tr("&Новый проект"), this, &MySAPRWindow::newProjectClicked, QKeySequence("CTRL+N"));
+    menuFile->addAction(tr("&Новый проект"), this, &MySAPRWindow::newProjectClicked,
+                        QKeySequence(Qt::CTRL + Qt::Key_N));
 
     QMenu *menuOpen = menuFile->addMenu(tr("&Открыть..."));
     menuOpen->addAction(tr("Открыть проект"), this,
-                        &MySAPRWindow::openProjectClicked, QKeySequence("CTRL+O"));
+                        &MySAPRWindow::openProjectClicked,
+                        QKeySequence(Qt::CTRL + Qt::Key_O));
     menuOpen->addAction(tr("Открыть расчет"), this,
-                        &MySAPRWindow::openComputeResultClicked, QKeySequence("CTRL+SHIFT+O"));
+                        &MySAPRWindow::openComputeResultClicked,
+                        QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O));
 
-    menuFile->addAction(tr("&Сохранить"), this, &MySAPRWindow::saveProjectClicked, QKeySequence("CTRL+S"));
+    menuFile->addAction(tr("&Сохранить"), this, &MySAPRWindow::saveProjectClicked,
+                        QKeySequence(Qt::CTRL + Qt::Key_S));
     menuFile->addAction(tr("Сохранить &как..."), this, &MySAPRWindow::saveAsProjectClicked);
     menuFile->addSeparator();
-    menuFile->addAction(tr("&Выход"), this, &MySAPRWindow::close, QKeySequence("CTRL+Q"));
+    menuFile->addAction(tr("&Выход"), this, &MySAPRWindow::close,
+                        QKeySequence(Qt::CTRL + Qt::Key_Q));
 
     QMenu* menuView = menuBar()->addMenu(tr("&Отображение"));
     menuView->addAction(tr("Показать номера &стержней"), graphicScene,
                         &ConstructionGraphicsScene::showRodLabels,
-                        QKeySequence("CTRL+R"))->setCheckable(true);
+                        QKeySequence(Qt::CTRL + Qt::Key_R))->setCheckable(true);
     menuView->addAction(tr("Показать номера &узлов"), graphicScene,
                         &ConstructionGraphicsScene::showNodeLabels,
-                        QKeySequence("CTRL+T"))->setCheckable(true);
+                        QKeySequence(Qt::CTRL + Qt::Key_T))->setCheckable(true);
     menuView->addAction(tr("Показать значения F нагрузок"), graphicScene,
                        &ConstructionGraphicsScene::showLongitudinalLabels,
-                        QKeySequence("CTRL+Y"))->setCheckable(true);
+                        QKeySequence(Qt::CTRL + Qt::Key_Y))->setCheckable(true);
     menuView->addAction(tr("Показать значения q нагрузок"), graphicScene,
                        &ConstructionGraphicsScene::showSectionalLabels,
-                        QKeySequence("CTRL+U"))->setCheckable(true);
+                        QKeySequence(Qt::CTRL + Qt::Key_U))->setCheckable(true);
     menuView->addAction(tr("Показать длину стержней"), graphicScene,
                        &ConstructionGraphicsScene::showRodLengths,
-                        QKeySequence("CTRL+I"))->setCheckable(true);
+                        QKeySequence(Qt::CTRL + Qt::Key_I))->setCheckable(true);
     menuView->addSeparator();
     menuView->addAction(tr("Нагрузки F к узлу"), graphicScene,
                        &ConstructionGraphicsScene::longitudinalforceToNode,
-                        QKeySequence("CTRL+B"))->setCheckable(true);
+                        QKeySequence(Qt::CTRL + Qt::Key_B))->setCheckable(true);
 
     // layout setup
     QVBoxLayout *addButtonLayout = new QVBoxLayout();
@@ -421,7 +426,7 @@ bool MySAPRWindow::saveProjectClicked()
 
     QFile file(projectFileInfo.filePath());
     if (!file.open(QIODevice::WriteOnly)) {
-        qWarning() << "Couldn't save project file";
+        // qWarning() << "Couldn't save project file";
         QMessageBox::critical(this, tr("Ошибка при сохранении"),
                               tr("Не удалось открыть файл на запись."));
         return false;
@@ -464,7 +469,7 @@ bool MySAPRWindow::openProjectClicked()
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Couldn't open project file";
+        // qWarning() << "Couldn't open project file";
         QMessageBox::critical(this, tr("Ошибка при открытии"),
                               tr("Не удалось открыть файл на чтение"));
         return false;
@@ -737,7 +742,7 @@ void MySAPRWindow::changePropertiesTable(QTreeWidget *treeWidget, QTreeWidgetIte
     int index = treeWidget->currentIndex().row();
     int type = item->data(0, TYPE_ELEMENT).toInt();
 
-    qDebug() << "Bind " << index;
+    // qDebug() << "Bind " << index;
 
     switch (type) {
     case ROD_ELEMENT:
@@ -777,7 +782,7 @@ void MySAPRWindow::checkLongitudinalForceErrors()
     const QColor errorColor(220, 0, 0);
     const QColor defaultColor(Qt::black);
 
-    qDebug() << "Min " << min << " max " << max;
+    // qDebug() << "Min " << min << " max " << max;
 
     for (int i = 0; i < longitudinalForces.size(); ++i) {
         for (int j = i + 1; j < longitudinalForces.size(); ++j) {
