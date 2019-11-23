@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(MySAPR VERSION 1.0 DESCRIPTION "${PROJECT_NAME} with Qt")
+project(MySAPR VERSION 1.0.1 DESCRIPTION "${PROJECT_NAME} with Qt")
 
 set(COMPANY "PEPEGA INC.")
 set(COPYRIGHT "All rights reserved.")

@@ -66,10 +66,13 @@ void PlotValuesGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphics
         }
         polygon << QPointF(x + partLenghts_[i], y);
 
-        painter->setBrush(Qt::BDiagPattern);
+        painter->setBrush(Qt::VerPattern);
         painter->drawPolygon(polygon);
 
         if (displyValues_) {
+            const double VALUE_WIDTH = minDrawStep * 4 / 10;
+            const double VALUE_HEIGHT = minDrawStep / 4;
+
             // значения на левой части
             double dyLeft = - minDrawStep / 3;
             if (i > 0) {
@@ -83,8 +86,8 @@ void PlotValuesGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphics
 
                     auto res = createText(QRectF(x,
                                                  polygon[1].y() + dyLeft,
-                                                 minDrawStep / 2,
-                                                 minDrawStep / 4).toRect(),
+                                                 VALUE_WIDTH,
+                                                 VALUE_HEIGHT).toRect(),
                                           Qt::AlignCenter,
                                           QString::number(parts_[i].left, 'g', 4));
                     painter->setFont(res.font);
@@ -95,8 +98,8 @@ void PlotValuesGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphics
             } else {
                 auto res = createText(QRectF(x,
                                              polygon[1].y() + dyLeft,
-                                             minDrawStep / 2,
-                                             minDrawStep / 4).toRect(),
+                                             VALUE_WIDTH,
+                                             VALUE_HEIGHT).toRect(),
                                       Qt::AlignCenter,
                                       QString::number(parts_[i].left, 'g', 4));
                 painter->setFont(res.font);
@@ -119,8 +122,8 @@ void PlotValuesGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphics
 
             auto res = createText(QRectF(x - minDrawStep / 2,
                                          polygon[polygon.size() - 2].y() + dyRight,
-                                         minDrawStep / 2,
-                                         minDrawStep / 4).toRect(),
+                                         VALUE_WIDTH,
+                                         VALUE_HEIGHT).toRect(),
                                   Qt::AlignCenter,
                                   QString::number(parts_[i].right, 'g', 4));
             painter->setFont(res.font);
@@ -131,7 +134,6 @@ void PlotValuesGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphics
             x += partLenghts_[i];
         }
     }
-
 
     // отметка
     auto res = createText(QRectF(minDrawStep / 4, y - minDrawStep / 2,
@@ -176,9 +178,6 @@ PlotValuesGraphicsItem::LabelResult PlotValuesGraphicsItem::createText(const QRe
                                                                        QString text) const
 {
     QFont correctFont = QApplication::font();
-    if (text.size() == 1) {
-        text = " " + text + " ";
-    }
 
     QRect tempRect;
     for (int i = 1; i < 100; ++i) {
@@ -186,6 +185,10 @@ PlotValuesGraphicsItem::LabelResult PlotValuesGraphicsItem::createText(const QRe
         tempRect = QFontMetrics(correctFont).boundingRect(rect, flags, text);
         if (tempRect.height() > rect.height() || tempRect.width() > rect.width()) {
             correctFont.setPixelSize(i - 1);
+            if (text.size() <= 2) {
+                tempRect.setX(tempRect.x() - 1);
+                tempRect.setWidth(tempRect.width() + 2);
+            }
             return {correctFont, tempRect, text};
         }
     }
